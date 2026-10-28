@@ -70,9 +70,43 @@ The microcontroller will respond with a packet
 
 | Byte | 0  | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10  |
 | ---  | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---- | --- |
-|      | STX | 0x00 | 0x0C (12) | Addr | ad0 | ad1 | ad2 | ad3 | ad4 | ad5 | ad6 |
+|      | STX | 0x00 | | Addr | ad0 | ad1 | ad2 | ad3 | ad4 | ad5 | ad6 |
 
 | Byte | 11  | 12  | 13  | 14  | 15  |
 | ---  | --- | --- | --- | --- | --- |
 |      | ad7 | portA | portB | portC | Bcs |
 
+| Byte | Description |
+| --- | --- |
+| STX | 0x55 |
+| 1  | 0 (this is the address of the control computer |
+| len |  0x0C (12) |
+| Addr | The address of the microcontroller sending this packet |
+| ad0 | ADC channel 0:   +5V sense |
+| ad1 | ADC channel 1:  +15V sense |
+| ad2 | ADC channel 2: +500V sense |
+| ad3 | ADC channel 3:  -15V sense |
+| ad4 | ADC channel 4:  +50V sense |
+| ad5 | ADC channel 5: temperature |
+| ad6 | ADC channel 6: forward power |
+| ad7 | ADC channel 7: reflected power |
+| portA | bit 0: 1 if relay closed |
+|       | bit 1: 1 if inhibit signal on |
+|       | bit 2: 1 if power signal active |
+|       | bit 3-7: don't care |
+| portB | bit 0-1: don't care |
+|       | bit 2: 1 if Cap 1 in circuit |
+|       | bit 3: 1 if Cap 2 in circuit |
+|       | bit 4: 1 if loop closed |
+|       | bits 5-7: don't care |
+| portC | bit 0: 0 if bad duty cycle |
+|       | bit 1 : 0 if bad SWR |
+|       | bit 2: 0 if bad +5V |
+|       | bit 3: 0 if bad +15V |
+|       | bit 4: 0 if bad +500V |
+|       | bit 5: 0 if bad -15V |
+|       | bit 6: 0 if bad +50V |
+|       | bit 7: don't care |
+| Bcs | Block checksum: the least significant 8 bits of the sum of bytes 1-14 |
+
+➡️If the relay is tripped, the values returned in portC are the values take at the time of the trip. 
